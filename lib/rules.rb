@@ -5,19 +5,19 @@ require_relative 'rule'
 class Rules
   attr_reader :rules,:fact_holder
 
-  def initialize(rules = {})
+  def initialize(fact_holder,rules = {})
     @rules = rules
     @fact_holder = fact_holder
   end
 
   # rules need access to the fact holder to provide it to each rule
-  def define(name,fact_holder,&block)
+  def define(name,&block)
     rules[name] = Rule.new(fact_holder,&block)
   end
 
   # returns new rule collection so we can chain method calls
   def satisfied
-    Rules.new(rules.values.select(&:satisfied?))
+    Rules.new(fact_holder,rules.values.select(&:satisfied?))
   end
 
   def select

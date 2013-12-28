@@ -18,12 +18,12 @@ class Environment
   #########################################################
 
   def rules
-    @rules ||= Rules.new
+    @rules ||= Rules.new(self)
   end
 
   def rule(name,&block)
     if block_given?
-      rules.define(name,self,&block)
+      rules.define(name,&block)
     else
       rules[name]
     end
