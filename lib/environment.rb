@@ -1,10 +1,11 @@
+require 'set'
 require_relative 'rules'
 
 class Environment
   attr_writer :facts
 
   def facts
-    @facts ||= []
+    @facts ||= Set.new
   end
 
   def assert(*facts)
@@ -21,6 +22,7 @@ class Environment
     @rules ||= Rules.new(self)
   end
 
+  # without block works as finder
   def rule(name,&block)
     if block_given?
       rules.define(name,&block)

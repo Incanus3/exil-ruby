@@ -25,8 +25,10 @@ class Rules
   end
 
   # delegate all unknown methods to the actual collection
-  def method_missing(*args,&block)
-    rules.send(*args,&block)
+  def method_missing(name,*args,&block)
+    # NoMethodError should be raised on this object
+    super unless rules.respond_to?(name)
+    rules.send(name,*args,&block)
   end
 
   def respond_to?(name)

@@ -1,9 +1,17 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
+    byebug (2.5.0)
+      columnize (~> 0.3.6)
+      debugger-linecache (~> 1.2.0)
     celluloid (0.15.2)
       timers (~> 1.1.0)
     coderay (1.1.0)
+    columnize (0.3.6)
+    debug_inspector (0.0.2)
+    debugger-linecache (1.2.0)
     diff-lcs (1.2.4)
     ffi (1.9.3)
     formatador (0.2.4)
@@ -16,6 +24,7 @@ GEM
     guard-rspec (4.2.0)
       guard (>= 2.1.1)
       rspec (>= 2.14, < 4.0)
+    interception (0.3)
     listen (2.4.0)
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
@@ -26,6 +35,21 @@ GEM
       coderay (~> 1.0)
       method_source (~> 0.8)
       slop (~> 3.4)
+    pry-byebug (1.2.0)
+      byebug (~> 2.2)
+      pry (~> 0.9.12)
+    pry-doc (0.5.1)
+      pry (>= 0.9)
+      yard (>= 0.8)
+    pry-docmore (0.1.1)
+      pry
+      pry-doc
+    pry-rescue (1.2.0)
+      interception (>= 0.3)
+      pry
+    pry-stack_explorer (0.4.9.1)
+      binding_of_caller (>= 0.7)
+      pry (>= 0.9.11)
     rake (10.1.1)
     rb-fsevent (0.9.3)
     rb-inotify (0.9.3)
@@ -41,6 +65,7 @@ GEM
     slop (3.4.7)
     thor (0.18.1)
     timers (1.1.0)
+    yard (0.8.7.3)
 
 PLATFORMS
   ruby
@@ -48,5 +73,11 @@ PLATFORMS
 DEPENDENCIES
   guard
   guard-rspec
+  pry
+  pry-byebug
+  pry-doc
+  pry-docmore
+  pry-rescue
+  pry-stack_explorer
   rake
   rspec
