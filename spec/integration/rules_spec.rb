@@ -4,24 +4,42 @@ describe 'rules' do
   include_context 'basic resources'
 
   context 'satisfaction' do
-    it "is satisfied when fact present" do
-      env.assert(:test)
+    context "simple facts" do
+      it "is satisfied when fact present" do
+        env.assert(:test)
 
-      env.rule(:test) do |r|
-        r.conditions :test
-        r.activations {}
+        env.rule(:test) do |r|
+          r.conditions :test
+          r.activations {}
+        end
+
+        expect(env.rule(:test)).to be_satisfied
       end
 
-      expect(env.rule(:test)).to be_satisfied
+      it "isn't satisfied when fact not present" do
+        env.rule(:test) do |r|
+          r.conditions :test
+          r.activations {}
+        end
+
+        expect(env.rule(:test)).not_to be_satisfied
+      end
     end
 
-    it "isn't satisfied when fact not present" do
-      env.rule(:test) do |r|
-        r.conditions :test
-        r.activations {}
-      end
+    context "facts with variables" do
+      it "works" do
+        env.assert [:in, :box, :hall]
 
-      expect(env.rule(:test)).not_to be_satisfied
+        env.rule(:move) do |r|
+          r.conditions [:in, :_object, :hall]
+          r.activations do
+            env.retract [:in, object, :hall]
+            env.assert [:in, object, :garage]
+          end
+        end
+
+        expect(env.rule(:move)).to be_satisfied
+      end
     end
 
     context "multiple conditions" do
