@@ -10,7 +10,7 @@ describe Pattern do
 
     context "when the fact matches the pattern" do
       it 'returns variable bindings' do
-        expect(pattern.match(fact)).to eq({ _obj: :box, _loc: :hall })
+        expect(pattern.match(fact)).to eq(Substitution.new({ _obj: :box, _loc: :hall }))
       end
     end
 

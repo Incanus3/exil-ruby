@@ -22,7 +22,7 @@ describe Rules do
       # expect(rules.matches).to match_array([Match.new(@rule, { _obj: :box, _loc: :garage }),
                                             # Match.new(@rule, { _obj: :robot, _loc: :hall })]) #, _somewhere: :garage })
       expect(rules.matches.find {|match|
-        match.rule == @rule && match.bindings == { _obj: :box, _loc: :garage } }).to be
+        match.rule == @rule && match.bindings == Substitution.new({ _obj: :box, _loc: :garage }) }).to be
     end
   end
 end

@@ -13,8 +13,8 @@ describe Rule do
     end
 
     it "returns correct matches" do
-      expect(rule.matches).to match_array([{ _obj: :box, _loc: :garage },
-                                           { _obj: :robot, _loc: :hall }]) #, _somewhere: :garage })
+      expect(rule.matches).to match_array([Substitution.new({ _obj: :box, _loc: :garage }),
+                                           Substitution.new({ _obj: :robot, _loc: :hall })]) #, _somewhere: :garage })
     end
   end
 end
