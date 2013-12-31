@@ -16,8 +16,8 @@ Environment.new do |e|
     end
   end
 
-  p e.facts #=> [[:in, :box, :hall]]
-  e.step
-  p e.facts #=> [[:in, :box, :garage]]
+  p e.facts #>> [[:in, :box, :hall]]
+  e.step    #>> "Firing rule MOVE with bindings {:@object=>:box}"
+  p e.facts #>> [[:in, :box, :garage]]
 end
 ```

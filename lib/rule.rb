@@ -19,8 +19,11 @@ end
 # list of facts
 # it can fire itself (evaluate the activations) when given variable Substitution
 class Rule
-  def initialize(&block)
+  attr_reader :name
+
+  def initialize(name,&block)
     raise 'Rule.new must get a block' unless block_given?
+    @name = name
     block.call(self)
   end
 
@@ -46,6 +49,7 @@ class Rule
   end
 
   def fire(bindings)
+    puts "firing rule #{name.upcase} with bindings #{bindings.to_h}"
     Context.new(bindings).instance_eval(&@activations)
   end
 

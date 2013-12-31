@@ -11,7 +11,7 @@ class Rules
   end
 
   def define(name,&block)
-    rules[name] = Rule.new(&block)
+    rules[name] = Rule.new(name,&block)
   end
 
   # returns list of Matches for all rules with given facts

@@ -5,7 +5,7 @@ describe Rule do
 
   describe "#matches" do
     let(:rule) do
-      rule = Rule.new do |r|
+      rule = Rule.new(:test) do |r|
         r.conditions [:in,:@obj,:@loc]
         r.activations {}
       end
@@ -23,7 +23,7 @@ describe Rule do
 
     it "evaluates activation in context with bound variables" do
       test = nil
-      rule = Rule.new do |r|
+      rule = Rule.new(:test) do |r|
         r.conditions []
         r.activations { test = @object }
       end
