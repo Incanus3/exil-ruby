@@ -1,37 +1,42 @@
 require 'spec_helper'
 
 describe 'inference' do
-  include_context 'basic resources'
-
   it 'works' do
-    env.assert(:test)
+    Environment.new do |e|
+      e.assert(:test)
 
-    env.rule(:test) do |r|
-      r.conditions :test
-      r.activations do
-        env.assert(:activated)
+      e.rule(:test) do |r|
+        r.conditions :test
+        r.activations do
+          e.assert(:activated)
+        end
       end
-    end
 
-    expect(env.facts).not_to include :activated
-    env.step
-    expect(env.facts).to include :activated
+      expect(e.facts).not_to include :activated
+      e.step
+      expect(e.facts).to include :activated
+    end
   end
 
   it 'assigns variables' do
-    env.assert [:in, :box, :hall]
+    Environment.new do |e|
+      e.assert [:in, :box, :hall]
 
-    env.rule(:move) do |r|
-      r.conditions [:in, :@object, :hall]
-      r.activations do |bindings|
-        env.retract [:in, bindings[:@object], :hall]
-        env.assert [:in, bindings[:@object], :garage]
+      e.rule(:move) do |r|
+        r.conditions [:in, :@object, :hall]
+        r.activations do |bindings|
+          e.retract [:in, bindings[:@object], :hall]
+          e.assert [:in, bindings[:@object], :garage]
+        end
       end
-    end
 
-    expect(env.facts).not_to include [:in,:box,:garage]
-    env.step
-    expect(env.facts).to include [:in,:box,:garage]
-    expect(env.facts).not_to include [:in,:box,:hall]
+      expect(e.facts).to include [:in,:box,:hall]
+      expect(e.facts).not_to include [:in,:box,:garage]
+
+      e.step
+
+      expect(e.facts).not_to include [:in,:box,:hall]
+      expect(e.facts).to include [:in,:box,:garage]
+    end
   end
 end

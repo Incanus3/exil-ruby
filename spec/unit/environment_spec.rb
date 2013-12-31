@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe Environment do
-  include_context 'basic resources'
+  subject(:env) { Environment.new }
+  let(:fact1) { "fact" }
+  let(:fact2) {[:in, :box, :hall]}
 
   context 'invocation' do
     context 'explicit environment' do

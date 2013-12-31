@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe Rules do
   let(:facts) { [[:goal,:box,:hall],[:in,:box,:garage],[:in,:robot,:hall]] }
-  # let(:fact_holder) { double("fact_holder", facts: facts) }
   let(:rules) { Rules.new }
 
   describe "#matches" do
