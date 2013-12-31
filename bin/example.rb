@@ -1,10 +1,7 @@
-# What?
-This is a proof of concept rewrite of my Expert System in Lisp project
+#!/usr/bin/env ruby
 
-See https://github.com/Incanus3/dipl-ruby/blob/master/spec/integration/inference_spec.rb for what it can do.
+require_relative '../lib/environment'
 
-## Example
-```ruby
 Environment.new do |e|
   e.assert [:in, :box, :hall]
 
@@ -20,4 +17,3 @@ Environment.new do |e|
   e.step
   p e.facts.to_a #=> [[:in, :box, :garage]]
 end
-```

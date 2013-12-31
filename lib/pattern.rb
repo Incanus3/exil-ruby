@@ -1,4 +1,4 @@
-require 'substitution'
+require_relative 'substitution'
 
 # Pattern provides matching with single fact
 # patterns and facts may be composite, Pattern matches them recursively
