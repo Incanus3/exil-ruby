@@ -8,4 +8,8 @@ class Match
   def activate
     @rule.fire(@bindings)
   end
+
+  def ==(other)
+    rule == other.rule && bindings == other.bindings
+  end
 end

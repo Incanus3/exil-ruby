@@ -1,16 +1,16 @@
 require_relative 'pattern'
 
-# condition should provide matching with facts_holder, negation and aggregation
+# Condition provides matching with a list of facts
+# subclasses could provide negation and aggregation of several conditions
 class Condition
   attr_reader :pattern
-  attr_reader :fact_holder
 
-  def initialize(fact_holder,pattern)
-    @fact_holder = fact_holder
+  def initialize(pattern)
     @pattern = Pattern.new(pattern)
   end
 
-  def matches
-    (fact_holder.facts.map { |fact| pattern.match(fact) } - [nil]).uniq
+  # returns list of possible bindings as Substitutions
+  def matches(facts)
+    (facts.map { |fact| pattern.match(fact) } - [nil]).uniq
   end
 end

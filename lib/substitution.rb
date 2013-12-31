@@ -15,6 +15,11 @@ class Substitution
     self.class.new result
   end
 
+  def self.compose(*substitutions)
+    substitutions.reduce {|acc,subst|
+      acc.compose(subst) if acc }
+  end
+
   def ==(other)
     self.subst == other.subst if other && other.is_a?(self.class)
   end

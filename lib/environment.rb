@@ -1,8 +1,18 @@
 require 'set'
 require_relative 'rules'
 
+# stores asserted facts and defined rules
+# handles inference
 class Environment
   attr_writer :facts
+
+  def initialize(&block)
+    if block_given?
+      yield(self)
+    end
+  end
+
+  #########################################################
 
   def facts
     @facts ||= Set.new
@@ -19,7 +29,7 @@ class Environment
   #########################################################
 
   def rules
-    @rules ||= Rules.new(self)
+    @rules ||= Rules.new
   end
 
   # without block works as finder
@@ -34,16 +44,9 @@ class Environment
   #########################################################
 
   def step
-    # Rules#matches returns list of pairs [rule,substitution]
-    matches = rules.matches
+    # matches could be stored in dedicated collection object, that would handle
+    # their selection (strategies), timestamping, etc.
+    matches = rules.matches(facts)
     matches.first.activate unless matches.empty?
-  end
-
-  #########################################################
-
-  def initialize(&block)
-    if block_given?
-      yield(self)
-    end
   end
 end

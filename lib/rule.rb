@@ -1,13 +1,12 @@
 require_relative 'condition'
 
+# Rule has conditions and activations
+# it can provide a list of possible matches (variable Substitutions) when given
+# list of facts
+# it can fire itself (evaluate the activations) when given variable Substitution
 class Rule
-  attr_reader :fact_holder
-
-  # rule's conditions need access to the fact holding object to know if they're
-  # satisfied (this is usually Environment)
-  def initialize(fact_holder,&block)
+  def initialize(&block)
     raise 'Rule.new must get a block' unless block_given?
-    @fact_holder = fact_holder
     block.call(self)
   end
 
@@ -23,10 +22,11 @@ class Rule
     if conds.empty?
       @conditions ||= []
     else
-      @conditions = conds.map {|cond| Condition.new(fact_holder,cond)}
+      @conditions = conds.map {|cond| Condition.new(cond)}
     end
   end
 
+  # this could possibly be called multiple times and store blocks in a list
   def activations(&block)
     @activations = block
   end
@@ -35,7 +35,9 @@ class Rule
     @activations.call(bindings)
   end
 
-  def matches
+  # returns list of matches (variable Substitution) of conditions with given
+  # facts
+  def matches(facts)
     # get list of matches for each condition - these are variable substitutions
     # find combinations of substitutions (one for each condition) with
     # consistent variable bindings and compose them
@@ -44,7 +46,7 @@ class Rule
     #
     # each condition.matches returns list of hashes, so this is a 2d list - one
     # list of possible matches for each condition
-    matches = conditions.map(&:matches)
+    matches = conditions.map {|cond| cond.matches(facts) }
     matches.reduce(:+)
   end
 end

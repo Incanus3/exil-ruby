@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Condition do
   describe "#matches" do
     let(:facts) { [[:goal,:box,:hall],[:in,:box,:garage],[:in,:robot,:hall]] }
-    let(:fact_holder) { double("fact_holder", facts: facts) }
 
-    let(:cond1) { Condition.new(fact_holder, [:in,:_obj,:_loc]) }
+    let(:cond1) { Condition.new([:in,:@obj,:@loc]) }
 
     it 'returns all matching substitutions of variables' do
-      expect(cond1.matches).to match_array [Substitution.new({ _obj: :box, _loc: :garage}),
-                                            Substitution.new({ _obj: :robot, _loc: :hall})]
+      expect(cond1.matches(facts)).to match_array [
+        Substitution.new({ :@obj => :box, :@loc => :garage}),
+        Substitution.new({ :@obj => :robot, :@loc => :hall})]
     end
   end
 end

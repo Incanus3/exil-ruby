@@ -22,10 +22,10 @@ describe 'inference' do
     env.assert [:in, :box, :hall]
 
     env.rule(:move) do |r|
-      r.conditions [:in, :_object, :hall]
+      r.conditions [:in, :@object, :hall]
       r.activations do |bindings|
-        env.retract [:in, bindings[:_object], :hall]
-        env.assert [:in, bindings[:_object], :garage]
+        env.retract [:in, bindings[:@object], :hall]
+        env.assert [:in, bindings[:@object], :garage]
       end
     end
 

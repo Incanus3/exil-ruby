@@ -2,15 +2,15 @@ require 'spec_helper'
 
 describe Pattern do
   describe "#match" do
-    let(:pattern)  { Pattern.new([:in,:_obj,:_loc]) }
-    let(:pattern2) { Pattern.new([:in,:_obj,:_obj,:_loc]) }
+    let(:pattern)  { Pattern.new([:in,:@obj,:@loc]) }
+    let(:pattern2) { Pattern.new([:in,:@obj,:@obj,:@loc]) }
     let(:fact)  { [:in,:box,:hall] }
     let(:fact2) { [:out,:box,:hall] }
     let(:fact3) { [:in,:box,:robot,:hall]}
 
     context "when the fact matches the pattern" do
       it 'returns variable bindings' do
-        expect(pattern.match(fact)).to eq(Substitution.new({ _obj: :box, _loc: :hall }))
+        expect(pattern.match(fact)).to eq(Substitution.new({ :@obj => :box, :@loc => :hall }))
       end
     end
 

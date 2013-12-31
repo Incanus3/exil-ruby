@@ -1,30 +1,24 @@
 require_relative 'rule'
 require_relative 'match'
 
-# encapsulates rule collection accessible by name, can provide interesting
-# accessors in future
+# encapsulates rule collection accessible by name
+# can compute matches for all stored rules
 class Rules
-  attr_reader :rules,:fact_holder
+  attr_reader :rules
 
-  def initialize(fact_holder,rules = {})
+  def initialize(rules = {})
     @rules = rules
-    @fact_holder = fact_holder
   end
 
-  # rules need access to the fact holder to provide it to each rule
   def define(name,&block)
-    rules[name] = Rule.new(fact_holder,&block)
+    rules[name] = Rule.new(&block)
   end
 
-  def matches
-    # Rule#matches retruns list of possible variable bindings
+  # returns list of Matches for all rules with given facts
+  def matches(facts)
     rules.values.map {|rule|
-      rule.matches.map { |bindings| Match.new(rule,bindings) }
+      rule.matches(facts).map { |bindings| Match.new(rule,bindings) }
     }.reduce(:+).uniq
-  end
-
-  def select
-    rules.first
   end
 
   # delegate all unknown methods to the actual collection
