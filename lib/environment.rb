@@ -4,9 +4,8 @@ require_relative 'rules'
 # stores asserted facts and defined rules
 # handles inference
 class Environment
-  attr_writer :facts
-
   def initialize(&block)
+    @facts = Set.new
     if block_given?
       yield(self)
     end
@@ -15,15 +14,15 @@ class Environment
   #########################################################
 
   def facts
-    @facts ||= Set.new
+    @facts.to_a
   end
 
   def assert(*facts)
-    self.facts += facts
+    @facts += facts
   end
 
   def retract(fact)
-    self.facts.delete(fact)
+    @facts.delete(fact)
   end
 
   #########################################################

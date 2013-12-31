@@ -16,8 +16,8 @@ Environment.new do |e|
     end
   end
 
-  p e.facts.to_a #=> [[:in, :box, :hall]]
+  p e.facts #=> [[:in, :box, :hall]]
   e.step
-  p e.facts.to_a #=> [[:in, :box, :garage]]
+  p e.facts #=> [[:in, :box, :garage]]
 end
 ```
