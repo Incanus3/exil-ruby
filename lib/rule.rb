@@ -31,11 +31,20 @@ class Rule
     @activations = block
   end
 
-  def fire
-    @activations.call
+  def fire(bindings)
+    @activations.call(bindings)
   end
 
-  def satisfied?
-    conditions.all?(&:satisfied?)
+  def matches
+    # get list of matches for each condition - these are variable substitutions
+    # find combinations of substitutions (one for each condition) with
+    # consistent variable bindings and compose them
+    # FOR NOW, THIS ONLY CONCATENATES THE LISTS OF MATCHINGS FOR EACH CONDITION
+    # SO THIS ONLY MAKES SENSE WITH ONE CONDITION
+    #
+    # each condition.matches returns list of hashes, so this is a 2d list - one
+    # list of possible matches for each condition
+    matches = conditions.map(&:matches)
+    matches.reduce(:+)
   end
 end

@@ -10,7 +10,7 @@ class Condition
     @pattern = Pattern.new(pattern)
   end
 
-  def satisfied?
-    fact_holder.facts.any? { |fact| pattern.matches?(fact) }
+  def matches
+    (fact_holder.facts.map { |fact| pattern.match(fact) } - [nil]).uniq
   end
 end

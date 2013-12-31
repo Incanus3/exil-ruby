@@ -34,9 +34,9 @@ class Environment
   #########################################################
 
   def step
-    unless rules.satisfied.empty?
-      rules.satisfied.select.fire
-    end
+    # Rules#matches returns list of pairs [rule,substitution]
+    matches = rules.matches
+    matches.first.activate unless matches.empty?
   end
 
   #########################################################

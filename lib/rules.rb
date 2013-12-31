@@ -1,4 +1,5 @@
 require_relative 'rule'
+require_relative 'match'
 
 # encapsulates rule collection accessible by name, can provide interesting
 # accessors in future
@@ -15,9 +16,11 @@ class Rules
     rules[name] = Rule.new(fact_holder,&block)
   end
 
-  # returns new rule collection so we can chain method calls
-  def satisfied
-    Rules.new(fact_holder,rules.values.select(&:satisfied?))
+  def matches
+    # Rule#matches retruns list of possible variable bindings
+    rules.values.map {|rule|
+      rule.matches.map { |bindings| Match.new(rule,bindings) }
+    }.reduce(:+).uniq
   end
 
   def select

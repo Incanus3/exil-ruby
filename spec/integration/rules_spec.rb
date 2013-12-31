@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'rules' do
+describe 'rules',:disabled do
   include_context 'basic resources'
 
   context 'satisfaction' do
@@ -32,10 +32,7 @@ describe 'rules' do
 
         env.rule(:move) do |r|
           r.conditions [:in, :_object, :hall]
-          r.activations do
-            env.retract [:in, object, :hall]
-            env.assert [:in, object, :garage]
-          end
+          r.activations {}
         end
 
         expect(env.rule(:move)).to be_satisfied

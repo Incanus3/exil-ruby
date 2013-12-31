@@ -6,9 +6,8 @@ class Pattern
     @pattern = pattern
   end
 
-  def matches?(fact)
-    # puts "========="
-    match(fact,pattern)
+  def match(fact)
+    _match(pattern,fact)
   end
 
   private
@@ -21,26 +20,41 @@ class Pattern
     atom.respond_to?(:to_s) && atom.to_s[0] == '_'
   end
 
-  def match_collection(fact,pattern)
+  def compose(subst1,subst2)
+    result = subst1
+    subst2.each do |(var,val)|
+      if result[var]
+        return nil if result[var] != val
+      else
+        result[var] = val
+      end
+    end
+    result
+  end
+
+  def match_collection(pattern,fact)
     if fact.size == pattern.size
-      fact.zip(pattern).map {|f,p| match(f,p)}.reduce {|acc,match| acc && match }
+      matches = fact.zip(pattern).map {|f,p| _match(p,f)}
+      unless matches.include?(nil)
+        matches.reduce {|acc,match|
+          compose(acc,match) if acc }
+      end
     end
   end
 
-  def match_atom(fact,pattern)
+  def match_atom(pattern,fact)
     if variable?(pattern)
-      true
-    else
-      fact == pattern
+      { pattern => fact }
+    elsif fact == pattern
+      {}
     end
   end
 
-  def match(fact,pattern)
-    # puts "matching #{fact} and #{pattern}"
+  def _match(pattern,fact)
     if collection?(fact) && collection?(pattern)
-      match_collection(fact,pattern)
+      match_collection(pattern,fact)
     elsif !collection?(fact) && !collection?(pattern)
-      match_atom(fact,pattern)
+      match_atom(pattern,fact)
     end
   end
 end
