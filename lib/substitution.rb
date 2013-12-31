@@ -1,3 +1,4 @@
+# wraps substitution hash and provides substitution composition
 class Substitution
   def initialize(subst)
     @subst = subst
@@ -21,11 +22,16 @@ class Substitution
   end
 
   def ==(other)
-    self.subst == other.subst if other && other.is_a?(self.class)
+    self.subst == other.subst if other.respond_to?(:subst,true)
   end
 
-  def [](index)
-    @subst[index]
+  # forward all unknown messages to the subst hash
+  def method_missing(name,*args,&block)
+    subst.send(name,*args,&block)
+  end
+
+  def respond_to_missing?(name,all = false)
+    super || subst.respond_to?(name)
   end
 
   protected

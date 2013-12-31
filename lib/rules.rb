@@ -28,7 +28,7 @@ class Rules
     rules.send(name,*args,&block)
   end
 
-  def respond_to?(name)
+  def respond_to_missing?(name)
     super || rules.respond_to?(name)
   end
 end

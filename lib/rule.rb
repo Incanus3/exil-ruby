@@ -1,5 +1,19 @@
 require_relative 'condition'
 
+# this provides a context in which Rule's activations are evaluated
+# .new takes bindings hash and binds instance variables in keys to values
+class Context
+  def variable?(var)
+    var.respond_to?(:to_s) && var.to_s[0] == '@'
+  end
+
+  def initialize(bindings)
+    bindings.each do |var,val|
+      instance_variable_set(var,val) if variable?(var)
+    end
+  end
+end
+
 # Rule has conditions and activations
 # it can provide a list of possible matches (variable Substitutions) when given
 # list of facts
@@ -32,7 +46,7 @@ class Rule
   end
 
   def fire(bindings)
-    @activations.call(bindings)
+    Context.new(bindings).instance_eval(&@activations)
   end
 
   # returns list of matches (variable Substitution) of conditions with given

@@ -7,9 +7,9 @@ Environment.new do |e|
 
   e.rule(:move) do |r|
     r.conditions [:in, :@object, :hall]
-    r.activations do |bindings|
-      e.retract [:in, bindings[:@object], :hall]
-      e.assert [:in, bindings[:@object], :garage]
+    r.activations do
+      e.retract [:in, @object, :hall]
+      e.assert [:in, @object, :garage]
     end
   end
 
