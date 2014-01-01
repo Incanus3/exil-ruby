@@ -3,6 +3,7 @@ require_relative 'rules'
 
 # stores asserted facts and defined rules
 # handles inference
+# Environment should not be a god class as in ExiL!
 class Environment
   def initialize(&block)
     @facts = Set.new

@@ -1,6 +1,6 @@
 # wraps substitution hash and provides substitution composition
 class Substitution
-  def initialize(subst)
+  def initialize(subst = {})
     @subst = subst
   end
 

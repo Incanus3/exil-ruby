@@ -4,17 +4,67 @@ describe Rule do
   let(:facts) { [[:goal,:box,:hall],[:in,:box,:garage],[:in,:robot,:hall]] }
 
   describe "#matches" do
-    let(:rule) do
-      rule = Rule.new(:test) do |r|
-        r.conditions [:in,:@obj,:@loc]
-        r.activations {}
+    context "with no conditions" do
+      let(:rule) do
+        Rule.new(:test) do |r|
+          r.conditions
+          r.activations {}
+        end
+      end
+
+      it "returns no matches" do
+        expect(rule.matches(facts)).to match_array([Substitution.new])
       end
     end
 
-    it "returns correct matches" do
-      expect(rule.matches(facts)).to match_array([
-        Substitution.new({ :@obj => :box, :@loc => :garage }),
-        Substitution.new({ :@obj => :robot, :@loc => :hall })])
+    context "with single condition" do
+      let(:rule) do
+        Rule.new(:test) do |r|
+          r.conditions [:in,:@obj,:@loc]
+          r.activations {}
+        end
+      end
+
+      it "returns correct matches" do
+        expect(rule.matches(facts)).to match_array([
+          Substitution.new({ :@obj => :box, :@loc => :garage }),
+          Substitution.new({ :@obj => :robot, :@loc => :hall })])
+      end
+    end
+
+    context "with multiple conditions" do
+      context "given by list",:disabled do
+        let(:rule) do
+          Rule.new(:test) do |r|
+            r.conditions [:in,:@object,:garage], [:in,:robot,:hall]
+            r.activations {}
+          end
+        end
+
+        it "returns correct matches" do
+          expect(rule.matches(facts)).to match_array([
+            Substitution.new({ :@obj => :box, :@loc => :garage }),
+            Substitution.new({ :@obj => :robot, :@loc => :hall })])
+        end
+      end
+
+      context "given by block",:disabled do
+        let(:rule) do
+          Rule.new(:test) do |r|
+            r.conditions do |c|
+              c.and([:in,:@object,:garage],
+                    c.or([:in,:robot,:hall],[:in,:robot,:outside]))
+            end
+            r.activations {}
+          end
+        end
+
+        it "returns correct matches" do
+          expect(rule.matches(facts)).to match_array([
+            Substitution.new({ :@obj => :box, :@loc => :garage }),
+            Substitution.new({ :@obj => :robot, :@loc => :hall })])
+        end
+      end
     end
   end
 

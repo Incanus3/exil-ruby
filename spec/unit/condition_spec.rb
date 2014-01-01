@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Condition do
+describe SingleCondition do
   describe "#matches" do
     let(:facts) { [[:goal,:box,:hall],[:in,:box,:garage],[:in,:robot,:hall]] }
 
-    let(:cond1) { Condition.new([:in,:@obj,:@loc]) }
+    let(:cond1) { SingleCondition.new([:in,:@obj,:@loc]) }
 
     it 'returns all matching substitutions of variables' do
       expect(cond1.matches(facts)).to match_array [

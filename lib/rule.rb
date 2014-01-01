@@ -14,10 +14,12 @@ class Context
   end
 end
 
-# Rule has conditions and activations
+# Rule stores a condition (which may be composite) and an activations block
 # it can provide a list of possible matches (variable Substitutions) when given
-# list of facts
-# it can fire itself (evaluate the activations) when given variable Substitution
+# list of facts, computing the matches is not its responsibility - it asks the
+# condition
+# it can fire itself (evaluate the activations block in context with variable
+# bindings) when given variable Substitution
 class Rule
   attr_reader :name
 
@@ -27,20 +29,10 @@ class Rule
     block.call(self)
   end
 
-  # @conditions is now array and this takes multiple ones, but in the future,
-  # either single condition should be defined or agregation functions should be
-  # used
-  # - conditions should yield a condition builder object
-  # - condition builder defines 'and', 'or' methods, which return
-  #   AndCondition.new(conditions), OrCondition, etc.
-  # - AndCondition will subclass CollectionAggregation, which stores list of
-  #   conditions and aggregates their satisfaction values
-  def conditions(*conds)
-    if conds.empty?
-      @conditions ||= []
-    else
-      @conditions = conds.map {|cond| Condition.new(cond)}
-    end
+  def conditions(*conds,&block)
+    # ConditionBuilder.build returns one condition, which may be composite (and,
+    # or), depending on number of conditions or the block given
+    @condition = ConditionBuilder.build(*conds,&block)
   end
 
   # this could possibly be called multiple times and store blocks in a list
@@ -56,15 +48,6 @@ class Rule
   # returns list of matches (variable Substitution) of conditions with given
   # facts
   def matches(facts)
-    # get list of matches for each condition - these are variable substitutions
-    # find combinations of substitutions (one for each condition) with
-    # consistent variable bindings and compose them
-    # FOR NOW, THIS ONLY CONCATENATES THE LISTS OF MATCHINGS FOR EACH CONDITION
-    # SO THIS ONLY MAKES SENSE WITH ONE CONDITION
-    #
-    # each condition.matches returns list of hashes, so this is a 2d list - one
-    # list of possible matches for each condition
-    matches = conditions.map {|cond| cond.matches(facts) }
-    matches.reduce(:+)
+    @condition.matches(facts)
   end
 end
