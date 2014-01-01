@@ -32,3 +32,8 @@ Environment.new do |e|
   p e.facts #>> [[:in, :box, :garage]]
 end
 ```
+
+The expert system domain is a great candidate for DSL, we could even get rid of the
+e and r helpers using instance_eval, but this would mean evaluating the block in
+a different context, thus preventing the usage of local functions defined in the
+surrounding lexical environment
