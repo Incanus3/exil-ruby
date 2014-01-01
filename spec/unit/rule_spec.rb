@@ -18,17 +18,34 @@ describe Rule do
     end
 
     context "with single condition" do
-      let(:rule) do
-        Rule.new(:test) do |r|
-          r.conditions [:in,:@obj,:@loc]
-          r.activations {}
+      context "given directly" do
+        let(:rule) do
+          Rule.new(:test) do |r|
+            r.conditions [:in,:@obj,:@loc]
+            r.activations {}
+          end
+        end
+
+        it "returns correct matches" do
+          expect(rule.matches(facts)).to match_array([
+            Substitution.new({ :@obj => :box, :@loc => :garage }),
+            Substitution.new({ :@obj => :robot, :@loc => :hall })])
         end
       end
 
-      it "returns correct matches" do
-        expect(rule.matches(facts)).to match_array([
-          Substitution.new({ :@obj => :box, :@loc => :garage }),
-          Substitution.new({ :@obj => :robot, :@loc => :hall })])
+      context "given by block" do
+        let(:rule) do
+          Rule.new(:test) do |r|
+            r.conditions {|c| c.single [:in,:@obj,:@loc]}
+            r.activations {}
+          end
+        end
+
+        it "returns correct matches" do
+          expect(rule.matches(facts)).to match_array([
+            Substitution.new({ :@obj => :box, :@loc => :garage }),
+            Substitution.new({ :@obj => :robot, :@loc => :hall })])
+        end
       end
     end
 

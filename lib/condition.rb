@@ -51,6 +51,10 @@ class ConditionBuilder
     end
   end
 
+  def self.single(condition)
+      SingleCondition.new(condition)
+  end
+
   def self.and(*conditions)
     AndCondition.new(conditions.map {|cond| build(cond)})
   end
@@ -66,7 +70,7 @@ class ConditionBuilder
     when 0
       EmptyCondition.new
     when 1
-      SingleCondition.new(conditions[0])
+      single(conditions[0])
     else
       self.and(*conditions)
     end
