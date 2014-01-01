@@ -51,8 +51,12 @@ class ConditionBuilder
     end
   end
 
+  def self.empty
+    EmptyCondition.new
+  end
+
   def self.single(condition)
-      SingleCondition.new(condition)
+    SingleCondition.new(condition)
   end
 
   def self.and(*conditions)
@@ -68,9 +72,9 @@ class ConditionBuilder
   def self.build_from_list(conditions)
     case conditions.size
     when 0
-      EmptyCondition.new
+      self.empty
     when 1
-      single(conditions[0])
+      self.single(conditions.first)
     else
       self.and(*conditions)
     end
