@@ -1,4 +1,4 @@
-require_relative 'condition'
+require_relative 'condition_builder'
 
 # this provides a context in which Rule's activations are evaluated
 # .new takes bindings hash and binds instance variables in keys to values

@@ -1,7 +1,13 @@
 require_relative 'pattern'
 
-# Condition provides matching with a list of facts
-# subclasses could provide negation and aggregation of several conditions
+# Conditions provide matching with a list of facts
+
+class EmptyCondition
+  def matches(facts)
+    [Substitution.new]
+  end
+end
+
 class SingleCondition
   attr_reader :pattern
 
@@ -15,68 +21,36 @@ class SingleCondition
   end
 end
 
-class EmptyCondition
-  def matches(facts)
-    [Substitution.new]
-  end
-end
-
 class AndCondition
-  def initialize(conditions)
+  def initialize(*conditions)
     @conditions = conditions
   end
 
   def matches(facts)
-    []
+    @conditions.reduce([Substitution.new]) do |acc,cond|
+      # puts "reduce, acc = #{acc}, cond = #{cond}"
+      acc.map do |subst1|
+        # puts "outer loop, subst1 = #{subst1}"
+        matches1 = cond.matches(facts)
+        # puts "matches1 = #{matches1}"
+        matches = matches1.map do |subst2|
+          # puts "inner loop, subst2 = #{subst2}"
+          subst1.compose(subst2)
+        end
+        matches.delete(nil)
+        # puts "matches = #{matches}"
+        matches
+      end.reduce(:+)
+    end
   end
 end
 
 class OrCondition
-  def initialize(conditions)
+  def initialize(*conditions)
     @conditions = conditions
   end
 
   def matches(facts)
     []
-  end
-end
-
-class ConditionBuilder
-  def self.build(*conditions)
-    if block_given?
-      # ignore list for now
-      yield(self)
-    else
-      build_from_list(conditions)
-    end
-  end
-
-  def self.empty
-    EmptyCondition.new
-  end
-
-  def self.single(condition)
-    SingleCondition.new(condition)
-  end
-
-  def self.and(*conditions)
-    AndCondition.new(conditions.map {|cond| build(cond)})
-  end
-
-  def self.or(*conditions)
-    OrCondition.new(conditions.map {|cond| build(cond)})
-  end
-
-  private
-
-  def self.build_from_list(conditions)
-    case conditions.size
-    when 0
-      self.empty
-    when 1
-      self.single(conditions.first)
-    else
-      self.and(*conditions)
-    end
   end
 end

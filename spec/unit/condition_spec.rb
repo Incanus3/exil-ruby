@@ -1,15 +1,35 @@
 require 'spec_helper'
 
-describe SingleCondition do
-  describe "#matches" do
-    let(:facts) { [[:goal,:box,:hall],[:in,:box,:garage],[:in,:robot,:hall]] }
+describe 'Conditions' do
+  let(:facts) { [[:goal,:box,:hall],[:in,:box,:garage],[:in,:robot,:hall]] }
 
-    let(:cond1) { SingleCondition.new([:in,:@obj,:@loc]) }
+  describe EmptyCondition do
+    let(:cond) { EmptyCondition.new }
 
-    it 'returns all matching substitutions of variables' do
-      expect(cond1.matches(facts)).to match_array [
+    it '#matches ruturns one empty substitution' do
+      expect(cond.matches(facts)).to eq [Substitution.new]
+    end
+  end
+
+  describe SingleCondition do
+    let(:cond) { SingleCondition.new([:in,:@obj,:@loc]) }
+
+    it '#matches returns all matching substitutions of variables' do
+      expect(cond.matches(facts)).to match_array [
         Substitution.new({ :@obj => :box, :@loc => :garage}),
         Substitution.new({ :@obj => :robot, :@loc => :hall})]
+    end
+  end
+
+  describe AndCondition do
+    let(:cond) { AndCondition.new(SingleCondition.new([:in,:@obj,:@loc]),
+                                  SingleCondition.new([:in,:robot,:@robloc]))}
+
+    it '#matches returns substituions matching all conditions' do
+      p cond.matches(facts)
+      # this should also include { :@obj => :robot, :@loc => :hall, :@robloc => :hall }
+      expect(cond.matches(facts)).to eq [
+        Substitution.new({ :@obj => :box, :@loc => :garage, :@robloc => :hall })]
     end
   end
 end
