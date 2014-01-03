@@ -41,7 +41,7 @@ describe 'inference' do
   end
 
   context 'multiple conditions' do
-    it 'works' do
+    it 'and works' do
       Environment.new do |e|
         e.assert [:in, :box, :hall],[:in, :robot, :hall]
 
@@ -64,6 +64,28 @@ describe 'inference' do
 
         expect(e.facts).not_to include [:in,:robot,:hall]
         expect(e.facts).to include [:in,:robot,:garage]
+      end
+    end
+
+    it 'and + or works' do
+      Environment.new do |e|
+        e.assert [:in, :box, :hall],[:in, :robot1, :garage],[:in, :robot2, :hall]
+
+        e.rule(:move) do |r|
+          r.conditions do |c|
+            c.and([:in,:box,:@loc],
+                  c.or([:in,:robot1,:@loc],[:in,:robot2,:@loc]))
+          end
+          r.activations do
+            e.retract [:in, :box, @loc]
+            e.assert [:in, :box, :garage]
+          end
+        end
+
+        e.step
+
+        expect(e.facts).not_to include [:in,:box,:hall]
+        expect(e.facts).to include [:in,:box,:garage]
       end
     end
   end

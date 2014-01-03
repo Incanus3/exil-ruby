@@ -41,3 +41,10 @@ The expert system domain is a great candidate for DSL, we could even get rid of 
 e and r helpers using instance_eval, but this would mean evaluating the block in
 a different context, thus preventing the usage of local functions defined in the
 surrounding lexical environment
+
+## What's supported
+- facts and patterns can be either simple atoms (tested by ==) or any composite
+  object implementing length and each (tested recursively)
+- variables are symbols starting with @, these are bound in rule's activations
+  as instance variables
+- and, or conditions are supported now, see inference integration spec

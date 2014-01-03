@@ -2,13 +2,19 @@ require_relative 'pattern'
 
 # Conditions provide matching with a list of facts
 
-class EmptyCondition
+class Condition
+  def matches(facts)
+    raise 'all conditions must implement #matches(facts)'
+  end
+end
+
+class EmptyCondition < Condition
   def matches(facts)
     [Substitution.new]
   end
 end
 
-class SingleCondition
+class SingleCondition < Condition
   attr_reader :pattern
 
   def initialize(pattern)
@@ -21,34 +27,34 @@ class SingleCondition
   end
 end
 
-class AndCondition
+class AndCondition < Condition
   def initialize(*conditions)
     @conditions = conditions
   end
+
+  def matches(facts)
+    matches = @conditions.map { |c| c.matches(facts) }
+      .reduce { |acc,matches| compose(acc,matches) }
+  end
+
+  private
 
   # composes two lists of substitutions in all possible combinations
   def compose(matches1,matches2)
-    matches = matches1.map do |subst1|
+    matches1.map do |subst1|
       matches = matches2.map do |subst2|
         subst1.compose(subst2)
       end
-    end
-    matches.delete(nil)
-    matches.reduce(:+)
-  end
-
-  def matches(facts)
-    @conditions.map { |c| c.matches(facts) }
-      .reduce { |acc,matches| compose(acc,matches) }
+    end.reduce(:+) - [nil]
   end
 end
 
-class OrCondition
+class OrCondition < Condition
   def initialize(*conditions)
     @conditions = conditions
   end
 
   def matches(facts)
-    []
+    matches = @conditions.map { |c| c.matches(facts) }.reduce(:+)
   end
 end

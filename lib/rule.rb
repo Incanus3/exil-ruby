@@ -41,7 +41,7 @@ class Rule
   end
 
   def fire(bindings)
-    puts "firing rule #{name.upcase} with bindings #{bindings.to_h}"
+    puts "firing rule #{name.upcase} with bindings #{bindings.inspect}"
     Context.new(bindings).instance_eval(&@activations)
   end
 

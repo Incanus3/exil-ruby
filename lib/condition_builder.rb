@@ -15,7 +15,11 @@ class ConditionBuilder
   end
 
   def self.single(condition)
-    SingleCondition.new(condition)
+    if condition.is_a?(Condition)
+      condition
+    else
+      SingleCondition.new(condition)
+    end
   end
 
   def self.and(*conditions)

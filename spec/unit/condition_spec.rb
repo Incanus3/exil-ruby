@@ -31,4 +31,15 @@ describe 'Conditions' do
         Substitution.new({ :@obj => :robot, :@loc => :hall, :@robloc => :hall })]
     end
   end
+
+  describe OrCondition do
+    let(:cond) { OrCondition.new(SingleCondition.new([:in,:@obj,:hall]),
+                                 SingleCondition.new([:in,:@obj,:garage]))}
+
+    it '#matches returns substituions matching any of the conditions' do
+      expect(cond.matches(facts)).to match_array [
+        Substitution.new({ :@obj => :box }),
+        Substitution.new({ :@obj => :robot })]
+    end
+  end
 end
