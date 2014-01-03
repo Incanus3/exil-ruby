@@ -40,30 +40,30 @@ describe 'inference' do
     end
   end
 
-  context 'multiple conditions',:disabled do
+  context 'multiple conditions' do
     it 'works' do
       Environment.new do |e|
-        e.assert [:in, :box, :hall]
+        e.assert [:in, :box, :hall],[:in, :robot, :hall]
 
         e.rule(:move) do |r|
           r.conditions do |c|
-            c.and([:in,:@object,:hall],[:in,:robot,:hall])
+            c.and([:in,:@object,:@loc],[:in,:robot,:@loc])
           end
           r.activations do
-            e.retract [:in, @object, :hall]
+            e.retract [:in, @object, @loc]
             e.assert [:in, @object, :garage]
-            e.retract [:in, :robot, :hall]
+            e.retract [:in, :robot, @loc]
             e.assert [:in, :robot, :garage]
           end
         end
-
-        expect(e.facts).to include [:in,:box,:hall]
-        expect(e.facts).not_to include [:in,:box,:garage]
 
         e.step
 
         expect(e.facts).not_to include [:in,:box,:hall]
         expect(e.facts).to include [:in,:box,:garage]
+
+        expect(e.facts).not_to include [:in,:robot,:hall]
+        expect(e.facts).to include [:in,:robot,:garage]
       end
     end
   end

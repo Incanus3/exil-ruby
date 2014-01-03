@@ -17,19 +17,23 @@ See https://github.com/Incanus3/dipl-ruby/blob/master/spec/integration/inference
 ## Example
 ```ruby
 Environment.new do |e|
-  e.assert [:in, :box, :hall]
+  e.assert [:in, :box, :hall],[:in, :robot, :hall]
 
   e.rule(:move) do |r|
-    r.conditions [:in, :@object, :hall]
+    r.conditions do |c|
+      c.and([:in,:@object,:@loc],[:in,:robot,:@loc])
+    end
     r.activations do
-      e.retract [:in, @object, :hall]
+      e.retract [:in, @object, @loc]
       e.assert [:in, @object, :garage]
+      e.retract [:in, :robot, @loc]
+      e.assert [:in, :robot, :garage]
     end
   end
 
-  p e.facts #>> [[:in, :box, :hall]]
-  e.step    #>> "Firing rule MOVE with bindings {:@object=>:box}"
-  p e.facts #>> [[:in, :box, :garage]]
+  p e.facts #>> [[:in, :box, :hall], [:in, :robot, :hall]]
+  e.step    #>> "Firing rule MOVE with bindings {:@object=>:box, :@loc=>:hall}"
+  p e.facts #>> [[:in, :box, :garage], [:in, :robot, :garage]]
 end
 ```
 

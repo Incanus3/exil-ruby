@@ -5,7 +5,7 @@ class Substitution
   end
 
   def compose(other)
-    result = self.subst
+    result = self.subst.dup
     other.subst.each do |(var,val)|
       if result[var]
         return nil if result[var] != val
@@ -23,6 +23,14 @@ class Substitution
 
   def ==(other)
     self.subst == other.subst if other.respond_to?(:subst,true)
+  end
+
+  def inspect
+    @subst.inspect
+  end
+
+  def to_s
+    @subst.to_s
   end
 
   # forward all unknown messages to the subst hash

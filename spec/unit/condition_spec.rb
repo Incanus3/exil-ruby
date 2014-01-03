@@ -26,10 +26,9 @@ describe 'Conditions' do
                                   SingleCondition.new([:in,:robot,:@robloc]))}
 
     it '#matches returns substituions matching all conditions' do
-      p cond.matches(facts)
-      # this should also include { :@obj => :robot, :@loc => :hall, :@robloc => :hall }
-      expect(cond.matches(facts)).to eq [
-        Substitution.new({ :@obj => :box, :@loc => :garage, :@robloc => :hall })]
+      expect(cond.matches(facts)).to match_array [
+        Substitution.new({ :@obj => :box, :@loc => :garage, :@robloc => :hall }),
+        Substitution.new({ :@obj => :robot, :@loc => :hall, :@robloc => :hall })]
     end
   end
 end

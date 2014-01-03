@@ -19,11 +19,11 @@ class ConditionBuilder
   end
 
   def self.and(*conditions)
-    AndCondition.new(conditions.map {|cond| build(cond)})
+    AndCondition.new(*conditions.map {|cond| build(cond)})
   end
 
   def self.or(*conditions)
-    OrCondition.new(conditions.map {|cond| build(cond)})
+    OrCondition.new(*conditions.map {|cond| build(cond)})
   end
 
   private

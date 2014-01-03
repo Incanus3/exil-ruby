@@ -50,27 +50,28 @@ describe Rule do
     end
 
     context "with multiple conditions" do
-      context "given by list",:disabled do
+      context "given by list" do
         let(:rule) do
           Rule.new(:test) do |r|
-            r.conditions [:in,:@object,:garage], [:in,:robot,:hall]
+            r.conditions [:in,:@obj,:@loc], [:in,:robot,:@robloc]
             r.activations {}
           end
         end
 
         it "returns correct matches" do
           expect(rule.matches(facts)).to match_array([
-            Substitution.new({ :@obj => :box, :@loc => :garage }),
-            Substitution.new({ :@obj => :robot, :@loc => :hall })])
+            Substitution.new({ :@obj => :box, :@loc => :garage, :@robloc => :hall }),
+            Substitution.new({ :@obj => :robot, :@loc => :hall, :@robloc => :hall })])
         end
       end
 
-      context "given by block",:disabled do
+      context "given by block" do
         let(:rule) do
           Rule.new(:test) do |r|
             r.conditions do |c|
-              c.and([:in,:@object,:garage],
-                    c.or([:in,:robot,:hall],[:in,:robot,:outside]))
+              c.and([:in,:@obj,:@loc], [:in,:robot,:@robloc])
+              # c.and([:in,:@object,:garage],
+                    # c.or([:in,:robot,:hall],[:in,:robot,:outside]))
             end
             r.activations {}
           end
@@ -78,8 +79,10 @@ describe Rule do
 
         it "returns correct matches" do
           expect(rule.matches(facts)).to match_array([
-            Substitution.new({ :@obj => :box, :@loc => :garage }),
-            Substitution.new({ :@obj => :robot, :@loc => :hall })])
+            Substitution.new({ :@obj => :box, :@loc => :garage, :@robloc => :hall }),
+            Substitution.new({ :@obj => :robot, :@loc => :hall, :@robloc => :hall })])
+            # Substitution.new({ :@obj => :box, :@loc => :garage }),
+            # Substitution.new({ :@obj => :robot, :@loc => :hall })])
         end
       end
     end

@@ -26,22 +26,20 @@ class AndCondition
     @conditions = conditions
   end
 
-  def matches(facts)
-    @conditions.reduce([Substitution.new]) do |acc,cond|
-      # puts "reduce, acc = #{acc}, cond = #{cond}"
-      acc.map do |subst1|
-        # puts "outer loop, subst1 = #{subst1}"
-        matches1 = cond.matches(facts)
-        # puts "matches1 = #{matches1}"
-        matches = matches1.map do |subst2|
-          # puts "inner loop, subst2 = #{subst2}"
-          subst1.compose(subst2)
-        end
-        matches.delete(nil)
-        # puts "matches = #{matches}"
-        matches
-      end.reduce(:+)
+  # composes two lists of substitutions in all possible combinations
+  def compose(matches1,matches2)
+    matches = matches1.map do |subst1|
+      matches = matches2.map do |subst2|
+        subst1.compose(subst2)
+      end
     end
+    matches.delete(nil)
+    matches.reduce(:+)
+  end
+
+  def matches(facts)
+    @conditions.map { |c| c.matches(facts) }
+      .reduce { |acc,matches| compose(acc,matches) }
   end
 end
 
