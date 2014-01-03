@@ -46,9 +46,7 @@ describe 'inference' do
         e.assert [:in, :box, :hall],[:in, :robot, :hall]
 
         e.rule(:move) do |r|
-          r.conditions do |c|
-            c.and([:in,:@object,:@loc],[:in,:robot,:@loc])
-          end
+          r.conditions [:in,:@object,:@loc],[:in,:robot,:@loc]
           r.activations do
             e.retract [:in, @object, @loc]
             e.assert [:in, @object, :garage]
