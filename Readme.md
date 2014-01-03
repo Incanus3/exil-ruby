@@ -55,9 +55,9 @@ end
 ```
 
 The expert system domain is a great candidate for DSL, we could even get rid of the
-e and r helpers using instance_eval, but this would mean evaluating the block in
-a different context, thus preventing the usage of local functions defined in the
-surrounding lexical environment
+**e**, **r** and **c** helpers using instance_eval, but this would mean
+evaluating the block in a different context, thus preventing the usage of local
+functions defined in the surrounding lexical environment
 
 Tested on Ruby 2.1, but should work fine on 1.9+
 

@@ -1,4 +1,4 @@
-require 'environment'
+require 'simplecov'
 
 RSpec.configure do |c|
   c.filter_run focus: true
@@ -6,3 +6,15 @@ RSpec.configure do |c|
   c.run_all_when_everything_filtered = true
   c.treat_symbols_as_metadata_keys_with_true_values = true
 end
+
+SimpleCov.start do
+  add_filter "/spec/"
+end
+
+SimpleCov.at_exit do
+  SimpleCov.result.format!
+  SimpleCov.minimum_coverage 97
+  SimpleCov.refuse_coverage_drop
+end
+
+require 'environment'
